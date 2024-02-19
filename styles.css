@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+}
+
+.board {
+    height: 50vh;
+    width: 50vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.cell {
+    display: flex;
+    border: 1px solid black;
+    font-size: 7em;
+    font-weight: bold;
+    justify-content: center;
+}
+
+.hover:hover {
+    background-color: lightgrey;
+}
+
+button {
+    font-size: 20px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 16px;
+    background-color: red;
+    color: white;
+}
+
+button:hover {
+    background-color: rgb(187, 0, 0);
+    cursor: pointer;
+}
