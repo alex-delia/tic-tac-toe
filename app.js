@@ -1,10 +1,14 @@
 const gameboard = (function () {
-    const board = new Array(9);
+    let board = new Array(9);
 
     const getBoard = () => board;
 
     const printBoard = () => {
         console.log(getBoard());
+    }
+
+    const resetBoard = () => {
+        board = new Array(9);
     }
 
     const placeSquare = (cell, playerPiece) => {
@@ -16,7 +20,7 @@ const gameboard = (function () {
         }
     }
 
-    return { getBoard, printBoard, placeSquare };
+    return { getBoard, printBoard, placeSquare, resetBoard };
 })();
 
 function Player(name) {
@@ -27,13 +31,24 @@ function Player(name) {
 function Game() {
     var winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [6, 4, 2]];
 
-    const p1Name = 'Alex';
-    const p2Name = 'Lucas';
+    const p1Name = document.querySelector('#player1Name').value;
+    const p2Name = document.querySelector('#player2Name').value;
 
-    const Player1 = Player(p1Name);
+    let Player1;
+    let Player2;
+
+    if (p1Name) {
+        Player1 = Player(p1Name);
+    } else {
+        Player1 = Player('Player 1');
+    }
     Player1.piece = 'X';
 
-    const Player2 = Player(p2Name);
+    if (p2Name) {
+        Player2 = Player(p2Name);
+    } else {
+        Player2 = Player('Player 2');
+    }
     Player2.piece = 'O';
 
     let activePlayer = Player1;
@@ -80,41 +95,66 @@ function Game() {
 }
 
 const DisplayController = (function () {
-    const game = Game();
     const container = document.querySelector('.container');
     const cells = document.querySelectorAll('.cell');
-    let result = document.createElement('h1');
+    const start = document.querySelector('.start');
+    const formContainer = document.querySelector('.formContainer');
+    const board = document.querySelector('.board');
+    const reset = document.querySelector('.reset');
+    const activePlayer = document.createElement('h2');
+    const result = document.createElement('h1');
 
-    function displayMove(e) {
-        this.innerText = game.getActivePlayer().piece;
-        this.removeEventListener('click', displayMove);
-        game.playRound(this.dataset.index);
-        const gameResult = game.checkWin()
-        if (gameResult !== undefined) {
-            for (let cell of cells) {
-                cell.classList.remove('hover');
-            }
-        }
-        if (Array.isArray(gameResult)) {
-            for (let cell of cells) {
-                for (let index of gameResult) {
-                    if (parseInt(cell.dataset.index) === index) {
-                        cell.style.backgroundColor = 'rgb(0, 222, 0)';
-                    }
+    reset.addEventListener('click', () => {
+        location.reload();
+    })
+
+    function startGame() {
+        board.style.display = 'grid';
+        formContainer.style.display = 'none';
+        reset.style.display = 'block';
+
+        const game = Game();
+        activePlayer.textContent = `${game.getActivePlayer().name}'s Turn`;
+        container.prepend(activePlayer);
+
+        function displayMove(e) {
+            this.innerText = game.getActivePlayer().piece;
+            this.removeEventListener('click', displayMove);
+            game.playRound(this.dataset.index);
+            const gameResult = game.checkWin()
+            if (gameResult !== undefined) {
+                for (let cell of cells) {
+                    cell.classList.remove('hover');
+                    activePlayer.remove();
                 }
-                cell.removeEventListener('click', displayMove);
+            } else {
+                this.classList.remove('hover');
             }
-            result.textContent = `${game.getActivePlayer().name} WINS`
-            container.prepend(result);
-        } else if (gameResult === 'TIE') {
-            result.textContent = `Tie Game`
-            container.prepend(result);
+            if (Array.isArray(gameResult)) {
+                for (let cell of cells) {
+                    for (let index of gameResult) {
+                        if (parseInt(cell.dataset.index) === index) {
+                            cell.style.backgroundColor = 'rgb(0, 222, 0)';
+                        }
+                    }
+                    cell.removeEventListener('click', displayMove);
+                }
+                result.textContent = `${game.getActivePlayer().name} WINS`
+                container.prepend(result);
+            } else if (gameResult === 'TIE') {
+                result.textContent = `Tie Game`
+                container.prepend(result);
+            }
+            activePlayer.textContent = `${game.getActivePlayer().name}'s Turn`;
+        }
+
+        for (let cell of cells) {
+            cell.addEventListener('click', displayMove);
         }
     }
 
-    for (let cell of cells) {
-        cell.addEventListener('click', displayMove);
-    }
+    start.addEventListener('click', startGame);
+
 })();
 
 

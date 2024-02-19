@@ -9,7 +9,19 @@
 </head>
 
 <body>
+    <h1>Tic-Tac-Toe</h1>
     <div class="container">
+        <div class="formContainer">
+            <div class="p1">
+                <label for="player1Name">Player 1 Name</label>
+                <input type="text" name="player1Name" id="player1Name" placeholder="Player 1">
+            </div>
+            <div class="p2">
+                <label for="player2Name">Player 2 Name</label>
+                <input type="text" name="player2Name" id="player2Name" placeholder="Player 2">
+            </div>
+            <button class="start">START</button>
+        </div>
         <div class="board">
             <div class="cell hover" id="cell0" data-index="0"></div>
             <div class="cell hover" id="cell1" data-index="1"></div>
@@ -21,7 +33,7 @@
             <div class="cell hover" id="cell7" data-index="7"></div>
             <div class="cell hover" id="cell8" data-index="8"></div>
         </div>
-        <button>RESET</button>
+        <button class="reset">RESET</button>
     </div>
     <script src="app.js"></script>
 </body>
